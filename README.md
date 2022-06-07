@@ -11,7 +11,7 @@ Clone the repository.
 ```sh
 git clone https://github.com/mattngaw/gmp-mult-baseline.git
 
-cd ./gmp-mult-baseline
+cd ./gmp-mult-baseline # gmp-mult-baseline
 ```
 
 Download the [latest version of GMP](https://gmplib.org/) (download the `.tar.lz`).
@@ -19,12 +19,12 @@ Download the [latest version of GMP](https://gmplib.org/) (download the `.tar.lz
 Place it in the `lib` directory and extract.
 
 ```sh
-tar --lzip -xvf ~/some/path/to/gmp-#.#.#.tar.lz
+tar --lzip -xvf ~/some/path/to/gmp-x.x.x.tar.lz
 ```
 
 Build GMP for your system.
 ```sh
-cd ./lib/gmp-#.#.#
+cd ./lib/gmp-x.x.x # gmp-mult-baseline/lib/gmp-x.x.x
 
 ./configure
 
@@ -32,6 +32,13 @@ make
 ```
 
 For extra help see: https://gmplib.org/manual/Introduction-to-GMP
+
+Build the GMP baseline.
+```sh
+cd ../ # gmp-mult-baseline
+
+make
+```
 
 ## Usage
 
@@ -51,7 +58,7 @@ The script takes three arguments:
 
 `n`: Total number of tests to run (i.e. how many multiplications to do)
 
-`k`: Factor power (i.e. bit width of each factor = 2^k)
+`k`: Factor power (i.e. bit width of each factor = `2^k`)
 
 ```sh
 python3 src/correctness_cmp.py <path> <n> <k>
