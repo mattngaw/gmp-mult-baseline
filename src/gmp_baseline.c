@@ -8,6 +8,8 @@ int main(int argc, char *argv[]) {
     char *x_file_name, *y_file_name, *z_file_name; // Paths to the factor files
     FILE *x_file, *y_file, *z_file; // Files containing factors for multiplication
     int x_str_len, y_str_len; // Number of characters in each factor file
+    clock_t t;
+    int ms;
     
     // Init x, y, z
     mpz_init(x);
@@ -15,7 +17,7 @@ int main(int argc, char *argv[]) {
     mpz_init(z);
 
     // Input error if incorrect number of arguments
-    if (argc != 6) {
+    if (argc < 6) {
         fprintf(stderr, "Invalid number of arguments: %d", argc-1);
         return 1;
     }
@@ -36,21 +38,48 @@ int main(int argc, char *argv[]) {
     char *x_buf = malloc(x_str_len * sizeof(char));
     char *y_buf = malloc(y_str_len * sizeof(char));
 
-    // Write into buffers
+    // Reading file contents into buffers
+    printf("\n\t\t Reading x into buffer...");
+    t = clock();
     fgets(x_buf, x_str_len, x_file);
+    t = clock() - t;
+    ms = t * 1000 / CLOCKS_PER_SEC;
+    printf("Finished in %dms\n", ms);
+    printf("\t\t Reading y into buffer...");
+    t = clock();
     fgets(y_buf, y_str_len, y_file);
+    t = clock() - t;
+    ms = t * 1000 / CLOCKS_PER_SEC;
+    printf("Finished in %dms\n", ms);
 
     // Set x and y from strings
     mpz_set_str(x, x_buf, 10);
     mpz_set_str(y, y_buf, 10);
 
     // Multiply
+    printf("\t\t GMP multiplying...");
+    t = clock();
     mpz_mul(z, y, x);
+    t = clock() - t;
+    ms = t * 1000 / CLOCKS_PER_SEC;
+    printf("Finished in %dms\n", ms);
+    printf("\t Writing product into file...");
+    t = clock();
     gmp_fprintf(z_file, "%Zd", z);
+    t = clock() - t;
+    ms = t * 1000 / CLOCKS_PER_SEC;
+    printf("Finished in %dms\n", ms);
 
     fclose(x_file);
     fclose(y_file);
     fclose(z_file);
+
+    free(x_buf);
+    free(y_buf);
+
+    mpz_clear(x);
+    mpz_clear(y);
+    mpz_clear(z);
 
     return 0;
 }

@@ -40,6 +40,7 @@ def main():
     # input("Enter to begin:")
 
     for i in range(n):
+        print(f"Iteration {i}")
         x, y = factors[i]
         print("\t Writing factor 1... ", end="", flush=True)
         t0 = time.time()
@@ -51,15 +52,15 @@ def main():
         print(f"Finished in {round(time.time() - t0, 10)}s")
 
         p1_args = [GMP_BASE, FILE_X, str(len(x)), FILE_Y, str(len(y)), PROD_GMP]
-        p2_args = [exe, FILE_X, str(len(x)), FILE_Y, str(len(y)), PROD_TEST, k]
-        print("\t Running GMP mult... ", end="")
+        p2_args = [exe, FILE_X, str(len(x)), FILE_Y, str(len(y)), PROD_TEST, str(k)]
+        print("\t Running GMP mult... ", end="", flush=True)
         t0 = time.time()
         p1 = subprocess.run(p1_args)
-        print(f"Finished in {round(time.time() - t0, 10)}s")
+        print(f"\t Finished in {round(time.time() - t0, 10)}s")
         print("\t Running test mult... ", end="", flush=True)
         t0 = time.time()
         p2 = subprocess.run(p2_args)
-        print(f"Finished in {round(time.time() - t0, 10)}s")
+        print(f"\t Finished in {round(time.time() - t0, 10)}s")
 
         p1.check_returncode()
         p2.check_returncode()
@@ -74,9 +75,9 @@ def main():
         print("\t Reading test product... ", end="", flush=True)
         t0 = time.time()
         prod_test = prod_test_f.read()
-        print(f"Finished in {round(time.time() - t0, 10)}s")
-        print("Finished!")
-        print("Comparing results... ", end="", flush=True)
+        print(f" Finished in {round(time.time() - t0, 10)}s")
+        print("\t Finished!")
+        print("\t Comparing results... ", end="", flush=True)
         t0 = time.time()
         if prod_gmp == prod_test:
             print("Correct ", end="", flush=True)
