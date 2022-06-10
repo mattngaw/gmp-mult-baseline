@@ -8,6 +8,8 @@ GMP_BASE = "./gmp_baseline"
 PROD_GMP = "temp/product-gmp.txt"
 PROD_TEST = "temp/product-test.txt"
 
+FILE_Z = "temp/results.txt"
+
 def main():
     print("Starting correctness comparison...")
 
@@ -26,16 +28,9 @@ def main():
     factors = random_factors(n, 2**int(k)) # generate random factors
     print(f"Finished in {round(time.time() - t0, 10)}s")
 
-    print("Opening factor 1... ", end="", flush=True)
-    f1 = open(FILE_X, mode='w', encoding="utf-8")
-    print("Finished!")
+    f3 = open(FILE_Z, mode='w', encoding="utf-8")
 
-    print("Opening factor 2... ", end="", flush=True)
-    f2 = open(FILE_Y, mode='w', encoding="utf-8")
-    print("Finished!")
-
-    prod_gmp_f = None
-    prod_test_f = None
+    incorrect = "=== Incorrect results ===\n\n"
 
     # input("Enter to begin:")
 
@@ -44,18 +39,20 @@ def main():
         x, y = factors[i]
         print("\t Writing factor 1... ", end="", flush=True)
         t0 = time.time()
-        f1.write(x)
+        with open(FILE_X, mode='w', encoding="utf-8") as f1:
+            f1.write(x)
         print(f"Finished in {round(time.time() - t0, 10)}s")
         print("\t Writing factor 2... ", end="", flush=True)
         t0 = time.time()
-        f2.write(y)
+        with open(FILE_Y, mode='w', encoding="utf-8") as f2:
+            f2.write(y)
         print(f"Finished in {round(time.time() - t0, 10)}s")
 
         p1_args = [GMP_BASE, FILE_X, str(len(x)), FILE_Y, str(len(y)), PROD_GMP]
         p2_args = [exe, FILE_X, str(len(x)), FILE_Y, str(len(y)), PROD_TEST, str(k)]
         print("\t Running GMP mult... ", end="", flush=True)
         t0 = time.time()
-        p1 = subprocess.run(p1_args)
+        p1 = subprocess.run(p1_args) 
         print(f"\t Finished in {round(time.time() - t0, 10)}s")
         print("\t Running test mult... ", end="", flush=True)
         t0 = time.time()
@@ -65,8 +62,8 @@ def main():
         p1.check_returncode()
         p2.check_returncode()
 
-        if not prod_gmp_f: prod_gmp_f = open(PROD_GMP, 'r')
-        if not prod_test_f: prod_test_f = open(PROD_TEST, 'r')
+        prod_gmp_f = open(PROD_GMP, 'r')
+        prod_test_f = open(PROD_TEST, 'r')
 
         print("\t Reading GMP product... ", end="", flush=True)
         t0 = time.time()
@@ -77,16 +74,27 @@ def main():
         prod_test = prod_test_f.read()
         print(f" Finished in {round(time.time() - t0, 10)}s")
         print("\t Finished!")
+        print(f"x: {x}")
+        print(f"y: {y}")
+        print(f"prod_gmp: {prod_gmp}")
+        print(f"prod_test: {prod_test}")
         print("\t Comparing results... ", end="", flush=True)
         t0 = time.time()
         if prod_gmp == prod_test:
             print("Correct ", end="", flush=True)
         else:
+            incorrect += f"Iteration {i}:\n"
+            incorrect += f"==> x: \n{x}\n"
+            incorrect += f"==> y: \n{y}\n"
+            incorrect += f"GMP result: {prod_gmp}\n"
+            incorrect += f"Your result: {prod_test}\n"
+            incorrect += "\n"
             print("Incorrect ", end="", flush=True)
         print(f"in {round(time.time() - t0, 10)}s")
 
-    f1.close()
-    f2.close()
+    f3.write(incorrect)
+
+    f3.close()
     prod_gmp_f.close()
     prod_test_f.close()
 
@@ -94,11 +102,14 @@ def main():
 
 
 def random_factors(n, k) -> list:
-    random_state = gmpy2.random_state()
     factors = []
+    rand_max = 10**k
     for _ in range(n):
-        x = gmpy2.mpz_urandomb(random_state, k)
-        y = gmpy2.mpz_urandomb(random_state, k)
+        random_state = gmpy2.random_state(hash(gmpy2.random_state()))
+        # x = gmpy2.mpz_urandomb(random_state, k)
+        # y = gmpy2.mpz_urandomb(random_state, k)
+        x = gmpy2.mpz_random(random_state, rand_max)
+        y = gmpy2.mpz_random(random_state, rand_max)
         x = x.digits()
         y = y.digits()
         factors.append((x, y))

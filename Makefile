@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -g -std=c99 -lgmp
+CFLAGS = -g -O0 -std=c99 -lgmp
 LDFLAGS = -lgmp
 
 SRC_DIR := ./src
