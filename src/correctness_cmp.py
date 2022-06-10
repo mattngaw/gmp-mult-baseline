@@ -104,12 +104,16 @@ def main():
 def random_factors(n, k) -> list:
     factors = []
     rand_max = 10**k
+    rand_min = 10**(k-1)
+    rand_diff = rand_max - rand_min
     for _ in range(n):
         random_state = gmpy2.random_state(hash(gmpy2.random_state()))
         # x = gmpy2.mpz_urandomb(random_state, k)
         # y = gmpy2.mpz_urandomb(random_state, k)
-        x = gmpy2.mpz_random(random_state, rand_max)
-        y = gmpy2.mpz_random(random_state, rand_max)
+        x = gmpy2.mpz_random(random_state, rand_diff)
+        y = gmpy2.mpz_random(random_state, rand_diff)
+        x = gmpy2.add(x, gmpy2.mpz(rand_min))
+        y = gmpy2.add(y, gmpy2.mpz(rand_min))
         x = x.digits()
         y = y.digits()
         factors.append((x, y))

@@ -24,9 +24,9 @@ int main(int argc, char *argv[]) {
 
     // Extract files and lengths from arguments
     x_file_name = argv[1];
-    x_str_len = atoi(argv[2]);
+    x_str_len = atoi(argv[2])+1;
     y_file_name = argv[3];
-    y_str_len = atoi(argv[4]);
+    y_str_len = atoi(argv[4])+1;
     z_file_name = argv[5];
 
     // Open x and y files
