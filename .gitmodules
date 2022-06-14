@@ -1,3 +1,6 @@
 [submodule "GMP"]
 	path = lib/gmp-6.2.1
 	url = https://github.com/alisw/GMP
+[submodule "lib/FFT-Integer-Multiplication"]
+	path = lib/FFT-Integer-Multiplication
+	url = https://github.com/njzhu/FFT-Integer-Multiplication
