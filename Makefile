@@ -1,8 +1,8 @@
 CC = gcc
-CFLAGS = -g -O0 -lgmp -D__FMA__ -frounding-math -Wno-deprecated -O3 -march=native -std=c11
-CPPFLAGS := -I./lib/FFT-Integer-Multiplication/ext_libs/IGen/igen_lib -I./lib/FFT-Integer-Multiplication/ext_libs/crlibm -I./lib/FFT-Integer-Multiplication/ext_libs/crlibm/scs_lib
-LDFLAGS = -lgmp -L $(FFT_DIR)/ext_libs/crlibm
-LDLIBS := -lcrlibm -lm
+CFLAGS = -g -O0 -lgmp -D__FMA__ -frounding-math -Wno-deprecated -march=native -std=c11 -fopenmp
+CPPFLAGS := -I./lib/FFT-Integer-Multiplication/ext_libs/IGen/igen_lib -I./lib/FFT-Integer-Multiplication/ext_libs/crlibm -I./lib/FFT-Integer-Multiplication/ext_libs/crlibm/scs_lib -I/ux1/users/mngaw/include
+LDFLAGS = -lgmp -L $(FFT_DIR)/ext_libs/crlibm -L $(HOME)/static/lib -L/ux1/users/mngaw/lib -L/usr/lib64
+LDLIBS := -lcrlibm -lm -l:libmpfi.a -l:libmpfr.a -l:libgmp.so
 
 SRC_DIR := ./src
 BUILD_DIR := ./build
